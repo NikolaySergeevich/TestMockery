@@ -1,22 +1,23 @@
 package main
 
 import (
+	"Lesson/geocoder"
 	"fmt"
 	"os"
 	"time"
 
-	"github.com/kelvins/geocoder"
 	sunrise "github.com/nathan-osman/go-sunrise"
 )
+
 //В этом закомиченном main написана программа, котрую нужно протестировать. Тут есть некие зависимости, которые будут обращаться
-//к API GOOGLE и это за деньги. естественно никто не будет платить деньги в тесте за обращение к стороннему сервису и поэтому 
-//нужно заменить это на mock. Но что бы заменить, нужно сразу переделеать код. Нужно отделить пользовательский интерфейс(stdin, stdout) 
+//к API GOOGLE и это за деньги. естественно никто не будет платить деньги в тесте за обращение к стороннему сервису и поэтому
+//нужно заменить это на mock. Но что бы заменить, нужно сразу переделеать код. Нужно отделить пользовательский интерфейс(stdin, stdout)
 //от логики программы
-// 
+//
 //======================================================================================================================================
 
 // func main() {
-	
+
 // 	placeName := os.Args[1]
 
 // 	rise, set := Calc(placeName)
@@ -35,7 +36,6 @@ import (
 // 	return
 // }
 
-
 // func getCoordsByName(city string) (latitude, longitude float64, err error) {
 // 	geocoder.ApiKey = os.Getenv("GOOGLE_MAPS_API_KEY")
 
@@ -50,15 +50,15 @@ import (
 func main() {
 	
 	placeName := os.Args[1]
-
-	rise, set := Calc(placeName)
+	g := &geocoder.GoogleGeocoder{ApiKey: os.Getenv("GOOGLE_MAPS_API_KEY")}
+	rise, set := Calc(g, placeName)
 
 	fmt.Printf("Sunrise: %v; Sunset: %v\n", rise.Local().Format(time.TimeOnly), set.Local().Format(time.TimeOnly))
 }
 //теперь повилась функция, которую можно тестровать, но тут есть зависимость, которую нужно заменить как-то и тут помогут mock,
-//но для этого нужно сделать интерфейс
-func Calc(placeName string) (rise, set time.Time){
-	lat, long, err := getCoordsByName(placeName)
+//но для этого нужно сделать интерфейс. И эта функция теперь зависит от этого интерфейса
+func Calc(geocoder Geocoder, placeName string) (rise, set time.Time){
+	lat, long, err := geocoder.GetCoordsByName(placeName)
 	if err != nil {
 		panic(err)
 	}
@@ -71,13 +71,4 @@ type Geocoder interface{
 	GetCoordsByName(city string) (latitude, longitude float64, err error)
 }
 
-func getCoordsByName(city string) (latitude, longitude float64, err error) {
-	geocoder.ApiKey = os.Getenv("GOOGLE_MAPS_API_KEY")
 
-	address := geocoder.Address{
-		City: city,
-	}
-
-	location, err := geocoder.Geocoding(address)
-	return location.Latitude, location.Longitude, err
-}
