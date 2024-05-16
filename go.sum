@@ -1,0 +1,4 @@
+github.com/kelvins/geocoder v0.0.0-20231112130812-98d82c75e49b h1:vYdrCOXf71Pb2+FHlcA7K2C674hZVZzODy3PHCDle1Y=
+github.com/kelvins/geocoder v0.0.0-20231112130812-98d82c75e49b/go.mod h1:JaVDVP24FJxa8OtNO5T1A2WKgstNreJGyK1PvBRzPW0=
+github.com/nathan-osman/go-sunrise v1.1.0 h1:ZqZmtmtzs8Os/DGQYi0YMHpuUqR/iRoJK+wDO0wTCw8=
+github.com/nathan-osman/go-sunrise v1.1.0/go.mod h1:RcWqhT+5ShCZDev79GuWLayetpJp78RSjSWxiDowmlM=
