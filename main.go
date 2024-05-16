@@ -2,11 +2,10 @@ package main
 
 import (
 	"Lesson/geocoder"
+	"Lesson/suncalc"
 	"fmt"
 	"os"
 	"time"
-
-	sunrise "github.com/nathan-osman/go-sunrise"
 )
 
 //В этом закомиченном main написана программа, котрую нужно протестировать. Тут есть некие зависимости, которые будут обращаться
@@ -51,24 +50,9 @@ func main() {
 	
 	placeName := os.Args[1]
 	g := &geocoder.GoogleGeocoder{ApiKey: os.Getenv("GOOGLE_MAPS_API_KEY")}
-	rise, set := Calc(g, placeName)
+	rise, set := suncalc.Calc(g, placeName)
 
 	fmt.Printf("Sunrise: %v; Sunset: %v\n", rise.Local().Format(time.TimeOnly), set.Local().Format(time.TimeOnly))
-}
-//теперь повилась функция, которую можно тестровать, но тут есть зависимость, которую нужно заменить как-то и тут помогут mock,
-//но для этого нужно сделать интерфейс. И эта функция теперь зависит от этого интерфейса
-func Calc(geocoder Geocoder, placeName string) (rise, set time.Time){
-	lat, long, err := geocoder.GetCoordsByName(placeName)
-	if err != nil {
-		panic(err)
-	}
-
-	rise, set = sunrise.SunriseSunset(lat, long, 2000, time.January, 1)
-	return
-}
-
-type Geocoder interface{
-	GetCoordsByName(city string) (latitude, longitude float64, err error)
 }
 
 
